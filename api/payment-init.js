@@ -27,7 +27,11 @@ module.exports = async (req, res) => {
   const siteUrl = process.env.SITE_URL || 'https://amskills.ru';
 
   if (!terminalKey || !password) {
-    res.status(500).json({ error: 'Платёжный модуль не настроен (нет ключей Т-Кассы)' });
+    const relevantKeys = Object.keys(process.env).filter((k) => k.includes('TINKOFF') || k.includes('SITE_URL'));
+    res.status(500).json({
+      error: 'Платёжный модуль не настроен (нет ключей Т-Кассы)',
+      debugFoundKeys: relevantKeys,
+    });
     return;
   }
 
