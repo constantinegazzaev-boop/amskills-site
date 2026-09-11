@@ -4,8 +4,44 @@
 //   TINKOFF_PASSWORD      — секретный пароль терминала (НЕ публиковать, только в .env / настройках хостинга)
 //   SITE_URL              — https://amskills.ru (для Success/Fail редиректов)
 const crypto = require('crypto');
+const https = require('https');
+const { RUSSIAN_TRUSTED_ROOT_CA, RUSSIAN_TRUSTED_SUB_CA } = require('./_russian-trusted-ca');
 
-const INIT_URL = 'https://securepay.tinkoff.ru/v2/Init';
+const INIT_HOST = 'securepay.tinkoff.ru';
+const INIT_PATH = '/v2/Init';
+
+// securepay.tinkoff.ru использует сертификат от Минцифры России, которому
+// стандартный набор доверенных CA (используемый fetch/undici) не доверяет.
+// Добавляем официальный российский корневой сертификат в список доверенных
+// именно для этого запроса — TLS-проверка остаётся полноценной, просто
+// расширяется список доверенных корней.
+const trustedCa = [...https.globalAgent.options.ca || [], RUSSIAN_TRUSTED_ROOT_CA, RUSSIAN_TRUSTED_SUB_CA];
+
+function postJson(hostname, path, payload) {
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify(payload);
+    const req = https.request(
+      {
+        hostname,
+        path,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(body),
+        },
+        ca: trustedCa,
+      },
+      (res) => {
+        let raw = '';
+        res.on('data', (chunk) => (raw += chunk));
+        res.on('end', () => resolve({ status: res.statusCode, raw }));
+      }
+    );
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
 
 function buildToken(params, password) {
   const tokenParams = { ...params, Password: password };
@@ -62,33 +98,24 @@ module.exports = async (req, res) => {
   const token = buildToken(initParams, password);
 
   try {
-    const tinkoffRes = await fetch(INIT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...initParams, Token: token }),
-    });
+    const { status, raw } = await postJson(INIT_HOST, INIT_PATH, { ...initParams, Token: token });
 
-    const rawText = await tinkoffRes.text();
     let data;
     try {
-      data = JSON.parse(rawText);
+      data = JSON.parse(raw);
     } catch {
-      res.status(502).json({ error: 'Т-Касса вернула не JSON', debugStatus: tinkoffRes.status, debugBody: rawText.slice(0, 500) });
+      res.status(502).json({ error: 'Т-Касса вернула не JSON' });
       return;
     }
 
     if (!data.Success) {
-      res.status(502).json({ error: data.Message || 'Т-Касса отклонила запрос', debugData: data });
+      res.status(502).json({ error: data.Message || 'Т-Касса отклонила запрос' });
       return;
     }
 
     res.status(200).json({ paymentUrl: data.PaymentURL });
   } catch (err) {
-    console.error('Tinkoff Init error:', err, err && err.cause);
-    res.status(500).json({
-      error: 'Не удалось связаться с Т-Кассой',
-      debug: String(err && err.stack || err),
-      debugCause: err && err.cause ? { name: err.cause.name, message: err.cause.message, code: err.cause.code } : null,
-    });
+    console.error('Tinkoff Init error:', err);
+    res.status(500).json({ error: 'Не удалось связаться с Т-Кассой' });
   }
 };
