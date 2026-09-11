@@ -27,11 +27,7 @@ module.exports = async (req, res) => {
   const siteUrl = process.env.SITE_URL || 'https://amskills.ru';
 
   if (!terminalKey || !password) {
-    const relevantKeys = Object.keys(process.env).filter((k) => k.includes('TINKOFF') || k.includes('SITE_URL'));
-    res.status(500).json({
-      error: 'Платёжный модуль не настроен (нет ключей Т-Кассы)',
-      debugFoundKeys: relevantKeys,
-    });
+    res.status(500).json({ error: 'Платёжный модуль не настроен (нет ключей Т-Кассы)' });
     return;
   }
 
@@ -82,6 +78,6 @@ module.exports = async (req, res) => {
     res.status(200).json({ paymentUrl: data.PaymentURL });
   } catch (err) {
     console.error('Tinkoff Init error:', err);
-    res.status(500).json({ error: 'Не удалось связаться с Т-Кассой', debug: String(err && err.message || err) });
+    res.status(500).json({ error: 'Не удалось связаться с Т-Кассой' });
   }
 };
