@@ -84,7 +84,11 @@ module.exports = async (req, res) => {
 
     res.status(200).json({ paymentUrl: data.PaymentURL });
   } catch (err) {
-    console.error('Tinkoff Init error:', err);
-    res.status(500).json({ error: 'Не удалось связаться с Т-Кассой', debug: String(err && err.stack || err) });
+    console.error('Tinkoff Init error:', err, err && err.cause);
+    res.status(500).json({
+      error: 'Не удалось связаться с Т-Кассой',
+      debug: String(err && err.stack || err),
+      debugCause: err && err.cause ? { name: err.cause.name, message: err.cause.message, code: err.cause.code } : null,
+    });
   }
 };
