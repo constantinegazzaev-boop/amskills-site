@@ -68,16 +68,23 @@ module.exports = async (req, res) => {
       body: JSON.stringify({ ...initParams, Token: token }),
     });
 
-    const data = await tinkoffRes.json();
+    const rawText = await tinkoffRes.text();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      res.status(502).json({ error: 'Т-Касса вернула не JSON', debugStatus: tinkoffRes.status, debugBody: rawText.slice(0, 500) });
+      return;
+    }
 
     if (!data.Success) {
-      res.status(502).json({ error: data.Message || 'Т-Касса отклонила запрос' });
+      res.status(502).json({ error: data.Message || 'Т-Касса отклонила запрос', debugData: data });
       return;
     }
 
     res.status(200).json({ paymentUrl: data.PaymentURL });
   } catch (err) {
     console.error('Tinkoff Init error:', err);
-    res.status(500).json({ error: 'Не удалось связаться с Т-Кассой' });
+    res.status(500).json({ error: 'Не удалось связаться с Т-Кассой', debug: String(err && err.stack || err) });
   }
 };
