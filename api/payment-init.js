@@ -58,8 +58,8 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const terminalKey = process.env.TINKOFF_TERMINAL_KEY;
-  const password = process.env.TINKOFF_PASSWORD;
+  const terminalKey = (process.env.TINKOFF_TERMINAL_KEY || '').trim();
+  const password = (process.env.TINKOFF_PASSWORD || '').trim();
   const siteUrl = process.env.SITE_URL || 'https://amskills.ru';
 
   if (!terminalKey || !password) {
