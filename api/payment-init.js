@@ -109,7 +109,7 @@ module.exports = async (req, res) => {
     }
 
     if (!data.Success) {
-      res.status(502).json({ error: data.Message || 'Т-Касса отклонила запрос', debugData: data });
+      res.status(502).json({ error: data.Message || 'Т-Касса отклонила запрос' });
       return;
     }
 
