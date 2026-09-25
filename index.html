@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AMSkills — школа индивидуальной подготовки хоккеистов</title>
-<meta name="description" content="AMSkills — индивидуальные тренировки по хоккею: лёд, ОФП/СФП, бросковые тренировки, дриблинг, видео-анализ. Персональный подход к каждому ученику.">
+<meta name="description" content="AMSkills — индивидуальные тренировки по хоккею с Антоном Минаевым: лёд, ОФП/СФП, бросковые тренировки, дриблинг, видео-анализ. Персональный подход к каждому ученику.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -19,7 +22,7 @@
     <nav class="nav" id="nav">
       <a href="#about">О школе</a>
       <a href="#advantages">Преимущества</a>
-      <a href="#coaches">Тренеры</a>
+      <a href="#coaches">Тренер</a>
       <a href="#reviews">Отзывы</a>
       <a href="#contacts">Контакты</a>
     </nav>
@@ -38,17 +41,45 @@
 
   <!-- HERO -->
   <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
     <div class="container hero-inner">
-      <p class="eyebrow">Индивидуальные тренировки по хоккею</p>
-      <h1>Школа индивидуальной подготовки&nbsp;AMSkills</h1>
+      <p class="eyebrow">Персональный тренер · Антон Минаев</p>
+      <h1>Играй сильнее. Тренируйся осознанно.</h1>
       <p class="hero-lead">
-        Персональные программы для хоккеистов от 4&nbsp;лет и взрослых игроков — под конкретный
-        уровень, позицию и цели каждого ученика.
+        Индивидуальные тренировки по хоккею для игроков от 4&nbsp;лет и взрослых —
+        под конкретный уровень, позицию и цель каждого ученика.
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary btn-lg" href="#contacts">Записаться на тренировку</a>
         <a class="btn btn-ghost btn-lg" href="tel:+79254767731">Позвонить тренеру</a>
       </div>
+    </div>
+  </section>
+
+  <!-- СТАТИСТИКА -->
+  <section class="stats-band">
+    <div class="container stats-grid">
+      <div class="stat">
+        <span class="stat-number">20+</span>
+        <span class="stat-label">лет тренерского и игрового опыта</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">5,0</span>
+        <span class="stat-label">рейтинг на Яндекс.Картах · 117 оценок</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">3</span>
+        <span class="stat-label">площадки для тренировок в Москве</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЦИТАТА / ФИЛОСОФИЯ -->
+  <section class="quote-band">
+    <div class="quote-bg" aria-hidden="true"></div>
+    <div class="container">
+      <p class="quote-text">«Каждая тренировка строится под конкретного игрока —
+        не под группу.»</p>
     </div>
   </section>
 
@@ -78,7 +109,7 @@
         </ul>
       </div>
       <div class="about-media">
-        <img src="img/about-portrait.jpg" alt="Индивидуальная тренировка AMSkills" loading="lazy">
+        <img src="img/action-skater.jpg" alt="Индивидуальная тренировка AMSkills" loading="lazy">
       </div>
     </div>
   </section>
@@ -91,27 +122,37 @@
 
       <div class="advantages-grid">
         <div class="advantage-card">
-          <div class="advantage-icon" aria-hidden="true">📍</div>
+          <div class="advantage-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg>
+          </div>
           <h3>Удобная локация и гибкий график</h3>
           <p>Занимаемся по индивидуальному графику — подстраиваемся под расписание ученика.</p>
         </div>
         <div class="advantage-card">
-          <div class="advantage-icon" aria-hidden="true">🏒</div>
-          <h3>Тренерский штаб уровня ВХЛ/КХЛ</h3>
-          <p>Тренеры с профессиональным игровым и тренерским опытом на высоком уровне.</p>
+          <div class="advantage-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3Z"/></svg>
+          </div>
+          <h3>Тренер уровня ВХЛ/КХЛ</h3>
+          <p>Профессиональный игровой и тренерский опыт более 20 лет.</p>
         </div>
         <div class="advantage-card">
-          <div class="advantage-icon" aria-hidden="true">🎯</div>
+          <div class="advantage-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>
+          </div>
           <h3>Многопрофильная программа</h3>
           <p>Лёд / ОФП (СФП) / бросковые тренировки / дриблинг / видео-анализ — в одной программе.</p>
         </div>
         <div class="advantage-card">
-          <div class="advantage-icon" aria-hidden="true">🔄</div>
+          <div class="advantage-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 0 1 13.66-5.66M20 12a8 8 0 0 1-13.66 5.66"/><path d="M17 3v4h-4M7 21v-4h4"/></svg>
+          </div>
           <h3>Постоянная обратная связь</h3>
           <p>Разбираем прогресс после каждой тренировки, корректируем программу по ходу дела.</p>
         </div>
         <div class="advantage-card">
-          <div class="advantage-icon" aria-hidden="true">📈</div>
+          <div class="advantage-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19h16M6 19V9l4 3 4-6 4 4v9"/></svg>
+          </div>
           <h3>Системный тренировочный процесс</h3>
           <p>Не разовые занятия, а выстроенная программа с измеримым прогрессом.</p>
         </div>
@@ -120,15 +161,22 @@
   </section>
 
   <!-- ТРЕНЕР -->
-  <section class="section" id="coaches">
-    <div class="container">
-      <p class="section-kicker">Тренер</p>
-      <h2>Кто проводит тренировки</h2>
-
-      <div class="coaches-grid coaches-grid-single">
-        <article class="coach-card coach-card-photo-only">
-          <img class="coach-photo-img coach-photo-img-full" src="img/coach-anton-minaev.png" alt="Минаев Антон Игоревич — основатель школы, старший тренер. Профессиональная деятельность более 20 лет, воспитанник хоккейной школы «Динамо» Москва, опыт игры в США на молодёжном уровне, многолетний стаж профессиональной деятельности в России и Европе." loading="lazy">
-        </article>
+  <section class="section coach-section" id="coaches">
+    <div class="container coach-grid">
+      <div class="coach-media">
+        <img src="img/coach-huddle.jpg" alt="Антон Минаев проводит тренировку" loading="lazy">
+      </div>
+      <div>
+        <p class="section-kicker">Тренер</p>
+        <h2>Минаев Антон Игоревич</h2>
+        <p class="coach-role">Основатель школы, старший тренер</p>
+        <ul class="coach-facts">
+          <li>Профессиональная деятельность более 20 лет</li>
+          <li>Воспитанник хоккейной школы «Динамо» Москва</li>
+          <li>Имеет опыт игры в США на молодёжном уровне</li>
+          <li>Многолетний стаж профессиональной деятельности в России и Европе</li>
+        </ul>
+        <a class="btn btn-primary" href="#contacts">Записаться к тренеру</a>
       </div>
     </div>
   </section>
@@ -231,7 +279,7 @@
     </div>
     <div class="footer-links">
       <a href="#about">О школе</a>
-      <a href="#coaches">Тренеры</a>
+      <a href="#coaches">Тренер</a>
       <a href="#contacts">Контакты</a>
       <a href="#payment">Оплата</a>
     </div>
