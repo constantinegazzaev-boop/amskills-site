@@ -298,7 +298,20 @@ p { margin: 0 0 16px; color: var(--color-muted); }
 .advantage-card p { margin: 0; font-size: 14px; }
 
 /* Coach */
+.coach-section { position: relative; overflow: hidden; }
+.coach-section-bg {
+  position: absolute;
+  inset: 0;
+  background: url("../img/puck-net.jpg") center 30% / cover no-repeat;
+}
+.coach-section-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 13, 16, 0.93);
+}
 .coach-grid {
+  position: relative;
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
   gap: 56px;
@@ -345,7 +358,20 @@ p { margin: 0 0 16px; color: var(--color-muted); }
 .reviews-link:hover { color: var(--color-text-on-cream); }
 
 /* Payment */
+.payment-section { position: relative; overflow: hidden; }
+.payment-section-bg {
+  position: absolute;
+  inset: 0;
+  background: url("../img/hero-arena.jpg") center 60% / cover no-repeat;
+}
+.payment-section-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 13, 16, 0.94);
+}
 .payment-grid {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
@@ -391,6 +417,12 @@ p { margin: 0 0 16px; color: var(--color-muted); }
 .location-card h3 { font-size: 17px; margin-bottom: 8px; text-transform: none; font-family: var(--font-body); font-weight: 700; }
 .location-card p { font-size: 14px; margin: 0 0 8px; color: var(--color-muted-on-cream); }
 .location-rating { color: var(--color-accent-dark); font-weight: 700; margin: 0 !important; }
+.location-card-accent {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  box-shadow: none;
+}
+.location-card-accent p { color: rgba(244,241,234,0.75); margin: 0; }
 
 /* Footer */
 .site-footer { background: #08090b; color: rgba(244,241,234,0.7); padding: 32px 0; border-top: 1px solid var(--color-border); }
