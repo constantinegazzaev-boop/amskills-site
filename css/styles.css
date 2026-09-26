@@ -347,6 +347,20 @@ p { margin: 0 0 16px; color: var(--color-muted); }
 .advantage-card h3 { font-size: 17px; margin-bottom: 8px; text-transform: none; font-family: var(--font-body); font-weight: 700; }
 .advantage-card p { margin: 0; font-size: 14px; }
 
+.advantage-card:last-child {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  text-align: left;
+}
+.advantage-card:last-child .advantage-icon { margin-bottom: 0; flex-shrink: 0; }
+.advantage-card:last-child > div:last-child { display: grid; gap: 4px; }
+.advantage-card:last-child h3, .advantage-card:last-child p { margin: 0; }
+@media (max-width: 560px) {
+  .advantage-card:last-child { flex-direction: column; text-align: center; }
+}
+
 /* Coach */
 .coach-section { position: relative; overflow: hidden; }
 .coach-section-bg {
