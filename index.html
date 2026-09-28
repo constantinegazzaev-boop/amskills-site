@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=4">
+<link rel="stylesheet" href="css/styles.css?v=7">
 </head>
 <body>
 
@@ -53,6 +53,7 @@
         <a class="btn btn-primary btn-lg" href="#contacts">Записаться на&nbsp;тренировку</a>
         <a class="btn btn-ghost btn-lg" href="tel:+79254767731">Позвонить тренеру</a>
       </div>
+      <p class="hero-microcopy">Ответим на&nbsp;вопросы и&nbsp;подберём удобное время</p>
     </div>
   </section>
 
@@ -110,7 +111,7 @@
         </ul>
       </div>
       <div class="about-media" data-animate="fade-up" style="--d:1">
-        <img src="img/coach-huddle.jpg" alt="Индивидуальная тренировка с&nbsp;тренером Антоном Минаевым" loading="lazy">
+        <img src="img/coach-huddle.webp" alt="Индивидуальная тренировка с&nbsp;тренером Антоном Минаевым" loading="lazy">
       </div>
     </div>
   </section>
@@ -143,7 +144,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>
           </div>
           <h3>Многопрофильная программа</h3>
-          <p>Лёд / ОФП (СФП) / бросковые тренировки / дриблинг / видео-анализ — в&nbsp;одной программе.</p>
+          <p>Лёд / ОФП (СФП) / бросковые тренировки / дриблинг / видео-анализ — в&nbsp;одной программе.
+          <strong>Всё в&nbsp;одном месте — не&nbsp;нужно возить ребёнка по&nbsp;разным секциям.</strong></p>
         </div>
         <div class="advantage-card" data-animate="fade-up" style="--d:3">
           <div class="advantage-icon" aria-hidden="true">
@@ -158,7 +160,7 @@
           </div>
           <div>
             <h3>Системный тренировочный процесс</h3>
-            <p>Не&nbsp;разовые занятия, а&nbsp;выстроенная программа с&nbsp;измеримым прогрессом.</p>
+            <p>Вы видите результат: видео-анализ и&nbsp;отчёт после каждой тренировки.</p>
           </div>
         </div>
       </div>
@@ -167,7 +169,7 @@
 
   <!-- ТРЕНЕР -->
   <section class="coach-section" id="coaches">
-    <img class="coach-section-bg" src="img/coach-1on1.jpg" alt="" aria-hidden="true" loading="lazy">
+    <img class="coach-section-bg" src="img/coach-1on1.webp" alt="" aria-hidden="true" loading="lazy">
     <div class="coach-section-scrim" aria-hidden="true"></div>
     <div class="container coach-layout">
       <div class="coach-main" data-animate="fade-up">
@@ -197,7 +199,7 @@
       <div class="section-head-center" data-animate="fade-up">
         <p class="section-kicker script-accent">Отзывы</p>
         <h2>Что говорят о&nbsp;тренировках с&nbsp;Антоном Минаевым</h2>
-        <p class="reviews-rating">★ 5,0 · 117 оценок на&nbsp;Яндекс.Картах</p>
+        <a class="reviews-rating" href="https://yandex.ru/maps/org/91652147573/reviews/" target="_blank" rel="noopener">★ 5,0 · 117 оценок на&nbsp;Яндекс.Картах</a>
       </div>
 
       <div class="reviews-grid">
@@ -243,7 +245,8 @@
 
       <form class="payment-card" id="payment-form" data-animate="fade-up" style="--d:1">
         <label for="payment-amount">Сумма к&nbsp;оплате, ₽</label>
-        <input type="number" id="payment-amount" name="amount" min="1" step="1" placeholder="Например, 2000" required>
+        <input type="number" id="payment-amount" name="amount" min="1" step="1" inputmode="numeric" placeholder="Например, 2000" required>
+        <span class="field-hint">Не уверены в&nbsp;сумме? Уточните у&nbsp;тренера перед оплатой.</span>
 
         <label for="payment-description">Комментарий (необязательно)</label>
         <input type="text" id="payment-description" name="description" placeholder="Например, ФИО ученика">
@@ -265,26 +268,34 @@
         </p>
       </div>
 
+      <div class="contacts-map" data-animate="fade-up">
+        <iframe
+          src="https://yandex.ru/map-widget/v1/?ll=37.910800%2C55.696000&z=9&pt=37.944730,55.656194,pm2rdl~37.929386,55.703824,pm2rdl~37.858312,55.727841,pm2rdl&l=map"
+          width="100%" height="420" frameborder="0" loading="lazy"
+          title="Карта площадок AMSkills: Томилино, Покровская, Салтыковская"></iframe>
+      </div>
+
       <div class="locations-grid">
         <article class="location-card" data-animate="fade-up">
           <svg class="location-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg>
           <h3>Томилино</h3>
           <p>Московская область, г.о. Люберцы, пгт Томилино, ул. Крылова, 6</p>
-          <p class="location-rating">★ 5,0</p>
+          <a class="location-rating" href="https://yandex.ru/maps/org/91652147573/reviews/" target="_blank" rel="noopener">★ 5,0</a>
         </article>
         <article class="location-card" data-animate="fade-up" style="--d:1">
           <svg class="location-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg>
           <h3>Покровская</h3>
           <p>Москва, Покровская ул., 22</p>
-          <p class="location-rating">★ 5,0</p>
+          <a class="location-rating" href="https://yandex.ru/maps/org/91652147573/reviews/" target="_blank" rel="noopener">★ 5,0</a>
         </article>
         <article class="location-card" data-animate="fade-up" style="--d:2">
           <svg class="location-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg>
           <h3>Салтыковская</h3>
           <p>Москва, Салтыковская ул., 1, стр. 1</p>
-          <p class="location-rating">★ 4,7</p>
+          <a class="location-rating" href="https://yandex.ru/maps/org/91652147573/reviews/" target="_blank" rel="noopener">★ 4,7</a>
         </article>
         <article class="location-card location-card-accent" data-animate="fade-up" style="--d:3">
+          <svg class="location-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 11h16M6 11V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3m-14 0-1 6m15-6 1 6M7 17v2m10-2v2M5 17h14"/></svg>
           <h3>Удобно добираться</h3>
           <p>Площадки в&nbsp;разных районах Москвы и&nbsp;Московской области — подберём место для&nbsp;индивидуальных тренировок рядом с&nbsp;вами.</p>
         </article>
