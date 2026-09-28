@@ -58,6 +58,7 @@ h1, h2, h3 {
   margin: 0 0 18px;
   font-weight: 800;
   text-transform: uppercase;
+  overflow-wrap: break-word;
 }
 h2 { font-size: clamp(32px, 4vw, 52px); max-width: 640px; }
 p { margin: 0 0 16px; color: var(--color-muted); }
@@ -314,47 +315,56 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   position: relative;
 }
 
-/* About */
-.about-grid {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 72px;
-  align-items: center;
+/* About — broken-grid overlap: photo bleeds full-width behind the text */
+.about-section { position: relative; overflow: hidden; }
+.about-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
+.about-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 75% center;
+}
+.about-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    var(--color-bg) 0%,
+    var(--color-bg) 36%,
+    rgba(10,28,58,0.86) 50%,
+    rgba(10,28,58,0.3) 72%,
+    rgba(10,28,58,0.05) 90%);
+}
+.about-section .container { position: relative; }
+.about-text { max-width: 540px; }
+.about-text h2 { text-shadow: 0 4px 24px rgba(0,0,0,0.4); }
 .about-lead {
   font-size: 19px;
   font-weight: 600;
   color: var(--color-muted);
   margin-top: -10px;
 }
-.section-muted .about-lead { color: var(--color-muted-on-cream); }
-.about-subhead { margin-top: 30px; font-size: 19px; text-transform: none; font-family: var(--font-body); font-weight: 700; letter-spacing: 0; }
-.check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 15px; }
+.about-subhead { margin-top: 30px; font-size: 19px; text-transform: none; font-family: var(--font-body); font-weight: 700; letter-spacing: 0; color: #fff; }
+.check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
 .check-list li {
   position: relative;
-  padding-left: 30px;
+  padding-left: 32px;
 }
 .check-list li::before {
-  content: "✓";
+  content: "";
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 20px;
-  text-align: center;
-}
-.about-media img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  left: 1px;
+  top: 5px;
+  width: 11px;
+  height: 6px;
+  border-left: 2px solid var(--color-silver);
+  border-bottom: 2px solid var(--color-silver);
+  transform: rotate(-48deg);
 }
 
 /* Advantages — dark cards with orange icons on a light section */
@@ -642,10 +652,20 @@ p { margin: 0 0 16px; color: var(--color-muted); }
 
 /* Responsive */
 @media (max-width: 900px) {
-  .about-grid, .payment-grid {
+  .payment-grid {
     grid-template-columns: 1fr;
   }
-  .about-media { order: -1; }
+  .about-bg {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 36px;
+  }
+  .about-bg::after {
+    background: linear-gradient(180deg, transparent 55%, var(--color-bg) 100%);
+  }
+  .about-text { max-width: none; }
   .stats-grid { grid-template-columns: 1fr; gap: 28px; }
   .stats-grid::before, .stats-grid::after { display: none; }
   .coach-content { max-width: 100%; }
