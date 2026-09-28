@@ -1,3 +1,32 @@
+// Хедер — тёмный фон при скролле
+const siteHeader = document.querySelector('.site-header');
+if (siteHeader) {
+  const toggleHeader = () => {
+    siteHeader.classList.toggle('is-scrolled', window.scrollY > 40);
+  };
+  toggleHeader();
+  window.addEventListener('scroll', toggleHeader, { passive: true });
+}
+
+// Плавное появление элементов при скролле
+const animatedEls = document.querySelectorAll('[data-animate]');
+if (animatedEls.length && 'IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
+  );
+  animatedEls.forEach((el) => observer.observe(el));
+} else {
+  animatedEls.forEach((el) => el.classList.add('is-visible'));
+}
+
 // Мобильное меню
 const burger = document.getElementById('burger');
 const nav = document.getElementById('nav');
