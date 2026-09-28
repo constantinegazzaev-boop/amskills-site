@@ -321,16 +321,8 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   gap: 14px;
   align-items: center;
 }
-.about-text { position: relative; z-index: 2; }
-.about-text h2 { position: relative; }
-.heading-poke {
-  position: relative;
-  display: inline-block;
-  right: -42px;
-  z-index: 3;
-  color: var(--color-accent);
-  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
-}
+.about-text { position: relative; z-index: 2; max-width: 550px; }
+.about-text h2 { font-size: clamp(28px, 3.4vw, 44px); }
 .about-lead {
   font-size: 19px;
   font-weight: 600;
@@ -342,9 +334,8 @@ p { margin: 0 0 16px; color: var(--color-muted); }
 .about-media { position: relative; z-index: 1; }
 .about-media img {
   width: 100%;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  object-position: 65% 22%;
+  height: auto;
+  object-fit: contain;
   border-radius: 0 100px 0 100px;
   border-left: 4px solid var(--color-accent);
   box-shadow: var(--shadow);
@@ -363,7 +354,8 @@ p { margin: 0 0 16px; color: var(--color-muted); }
 }
 .timeline-list li {
   position: relative;
-  padding: 0 0 22px 30px;
+  padding: 0 0 24px 42px;
+  line-height: 1.65;
 }
 .timeline-list li:last-child { padding-bottom: 0; }
 .timeline-list li::before {
@@ -666,9 +658,9 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   .payment-grid, .about-grid {
     grid-template-columns: 1fr;
   }
-  .about-media { order: -1; margin-bottom: 32px; }
+  .about-text { max-width: none; }
+  .about-media { margin-top: 32px; }
   .about-media img { border-radius: 0 60px 0 60px; }
-  .heading-poke { right: auto; color: inherit; text-shadow: none; }
   .stats-grid { grid-template-columns: 1fr; gap: 28px; }
   .stats-grid::before, .stats-grid::after { display: none; }
   .coach-content { max-width: 100%; }
