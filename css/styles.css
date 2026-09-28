@@ -145,6 +145,15 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   color: var(--color-ink);
 }
 .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; flex-shrink: 0; }
+.logo-text-group { display: flex; flex-direction: column; gap: 2px; line-height: 1.15; }
+.logo-tagline {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
 .logo-mark {
   display: inline-flex;
   align-items: center;
@@ -690,6 +699,7 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   }
   .nav a { font-size: 16px; }
   .header-actions .phone { display: none; }
+  .logo-tagline { display: none; }
   .burger {
     display: inline-flex;
     flex-direction: column;

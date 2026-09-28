@@ -81,7 +81,7 @@ if (paymentForm) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amount,
-          description: descriptionInput.value || 'Оплата тренировки AMSkills',
+          description: descriptionInput.value || 'Оплата тренировки — Антон Минаев',
         }),
       });
 
