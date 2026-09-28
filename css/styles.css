@@ -88,7 +88,6 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   border-top-color: var(--color-border-on-cream);
 }
 .section-muted p { color: var(--color-muted-on-cream); }
-.section-muted .check-list li,
 .section-muted h2, .section-muted h3 { color: var(--color-text-on-cream); }
 
 /* Scroll-triggered animations */
@@ -315,46 +314,23 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   position: relative;
 }
 
-/* About — broken-grid overlap: cutout of the coach emerges over the text, blurred rink behind */
-.about-section { position: relative; overflow: hidden; }
-.about-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+/* About — strict two-column grid, diagonal-cut photo, timeline checklist */
+.about-grid {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  gap: 14px;
+  align-items: center;
 }
-.about-bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(9px) brightness(0.55) saturate(0.85);
-  transform: scale(1.1);
+.about-text { position: relative; z-index: 2; }
+.about-text h2 { position: relative; }
+.heading-poke {
+  position: relative;
+  display: inline-block;
+  right: -42px;
+  z-index: 3;
+  color: var(--color-accent);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
 }
-.about-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(10,28,58,0.45);
-}
-.about-section .container { position: relative; }
-.about-cutout {
-  position: absolute;
-  top: 46px;
-  right: 18%;
-  width: 40%;
-  max-width: 440px;
-  min-width: 300px;
-  z-index: 2;
-  pointer-events: none;
-}
-.about-cutout img {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 25px 45px rgba(0,0,0,0.55));
-}
-.about-text { max-width: 580px; position: relative; z-index: 1; }
-.about-text h2 { text-shadow: 0 4px 24px rgba(0,0,0,0.4); }
 .about-lead {
   font-size: 19px;
   font-weight: 600;
@@ -362,21 +338,44 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   margin-top: -10px;
 }
 .about-subhead { margin-top: 30px; font-size: 19px; text-transform: none; font-family: var(--font-body); font-weight: 700; letter-spacing: 0; color: #fff; }
-.check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
-.check-list li {
-  position: relative;
-  padding-left: 32px;
+
+.about-media { position: relative; z-index: 1; }
+.about-media img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: 65% 22%;
+  border-radius: 0 100px 0 100px;
+  border-left: 4px solid var(--color-accent);
+  box-shadow: var(--shadow);
+  display: block;
 }
-.check-list li::before {
+
+.timeline-list { list-style: none; padding: 0; margin: 0; position: relative; }
+.timeline-list::before {
   content: "";
   position: absolute;
-  left: 1px;
-  top: 5px;
-  width: 11px;
-  height: 6px;
-  border-left: 2px solid var(--color-silver);
-  border-bottom: 2px solid var(--color-silver);
-  transform: rotate(-48deg);
+  left: 5px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: rgba(255,255,255,0.14);
+}
+.timeline-list li {
+  position: relative;
+  padding: 0 0 22px 30px;
+}
+.timeline-list li:last-child { padding-bottom: 0; }
+.timeline-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(200,16,46,0.2);
 }
 
 /* Advantages — dark cards with orange icons on a light section */
@@ -664,29 +663,12 @@ p { margin: 0 0 16px; color: var(--color-muted); }
 
 /* Responsive */
 @media (max-width: 900px) {
-  .payment-grid {
+  .payment-grid, .about-grid {
     grid-template-columns: 1fr;
   }
-  .about-bg {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    margin-bottom: -40px;
-  }
-  .about-cutout {
-    position: relative;
-    inset: auto;
-    top: auto;
-    right: auto;
-    width: 220px;
-    max-width: 60%;
-    min-width: 0;
-    margin: 0 auto 12px;
-  }
-  .about-cutout img { filter: drop-shadow(0 18px 30px rgba(0,0,0,0.55)); }
-  .about-text { max-width: none; text-align: center; }
-  .about-text .check-list { text-align: left; }
+  .about-media { order: -1; margin-bottom: 32px; }
+  .about-media img { border-radius: 0 60px 0 60px; }
+  .heading-poke { right: auto; color: inherit; text-shadow: none; }
   .stats-grid { grid-template-columns: 1fr; gap: 28px; }
   .stats-grid::before, .stats-grid::after { display: none; }
   .coach-content { max-width: 100%; }
