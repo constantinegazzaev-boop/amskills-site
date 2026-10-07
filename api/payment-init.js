@@ -3,6 +3,9 @@
 //   TINKOFF_TERMINAL_KEY  — TerminalKey из личного кабинета Т-Кассы
 //   TINKOFF_PASSWORD      — секретный пароль терминала (НЕ публиковать, только в .env / настройках хостинга)
 //   SITE_URL              — https://amskills.ru (для Success/Fail редиректов)
+// Для кассового чека (54-ФЗ):
+//   TINKOFF_TAXATION      — система налогообложения ИП: patent (по умолчанию) | usn_income | usn_income_outcome | osn
+//   TINKOFF_VAT           — ставка НДС в чеке, по умолчанию none (без НДС): none | vat0 | vat5 | vat7 | vat20 | vat22
 const crypto = require('crypto');
 const https = require('https');
 const { RUSSIAN_TRUSTED_ROOT_CA, RUSSIAN_TRUSTED_SUB_CA } = require('./_russian-trusted-ca');
@@ -43,6 +46,17 @@ function postJson(hostname, path, payload) {
   });
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+// Т-Касса принимает телефон в формате +79991234567
+function normalizePhone(raw) {
+  const digits = String(raw || '').replace(/\D/g, '');
+  if (digits.length === 11 && (digits[0] === '7' || digits[0] === '8')) return '+7' + digits.slice(1);
+  if (digits.length === 10) return '+7' + digits;
+  return null;
+}
+
+// Токен считается только по плоским полям корневого объекта — Receipt в него не входит.
 function buildToken(params, password) {
   const tokenParams = { ...params, Password: password };
   const sorted = Object.keys(tokenParams)
@@ -84,11 +98,24 @@ module.exports = async (req, res) => {
     return;
   }
 
+  const email = String(body.email || '').trim();
+  const phone = normalizePhone(body.phone);
+
+  if (!EMAIL_RE.test(email) || email.length > 64) {
+    res.status(400).json({ error: 'Укажите корректный e-mail для чека' });
+    return;
+  }
+  if (!phone) {
+    res.status(400).json({ error: 'Укажите телефон, например +7 900 000-00-00' });
+    return;
+  }
+
   const orderId = `amskills-${Date.now()}`;
+  const amountKop = Math.round(amount * 100); // в копейках
 
   const initParams = {
     TerminalKey: terminalKey,
-    Amount: Math.round(amount * 100), // в копейках
+    Amount: amountKop,
     OrderId: orderId,
     Description: description,
     SuccessURL: `${siteUrl}/success.html`,
@@ -97,13 +124,53 @@ module.exports = async (req, res) => {
 
   const token = buildToken(initParams, password);
 
-  try {
-    const { status, raw } = await postJson(INIT_HOST, INIT_PATH, { ...initParams, Token: token });
+  // Кассовый чек по 54-ФЗ: одна позиция «услуга», расчёт в момент оплаты.
+  // ИП на патенте — по умолчанию; способ расчёта (full_payment) подтвердите у бухгалтера.
+  const receipt = {
+    Email: email,
+    Phone: phone,
+    Taxation: (process.env.TINKOFF_TAXATION || 'patent').trim(),
+    Items: [
+      {
+        Name: 'Услуги по индивидуальной подготовке хоккеистов',
+        Price: amountKop,
+        Quantity: 1,
+        Amount: amountKop,
+        Tax: (process.env.TINKOFF_VAT || 'none').trim(),
+        PaymentMethod: 'full_payment',
+        PaymentObject: 'service',
+      },
+    ],
+  };
 
-    let data;
+  const sendInit = async (withReceipt) => {
+    const { raw } = await postJson(INIT_HOST, INIT_PATH, {
+      ...initParams,
+      Token: token,
+      ...(withReceipt ? { Receipt: receipt } : {}),
+    });
     try {
-      data = JSON.parse(raw);
+      return JSON.parse(raw);
     } catch {
+      return null;
+    }
+  };
+
+  try {
+    let data = await sendInit(true);
+
+    // Если Т-Касса не приняла чек (например, касса не привязана к терминалу), создаём платёж без него,
+    // чтобы не терять оплаты, и пишем в лог — чек тогда придётся пробить вручную. Данные плательщика в лог не попадают.
+    if (data && !data.Success) {
+      console.error('Т-Касса отклонила Init с чеком:', data.ErrorCode, data.Message, data.Details);
+      const retry = await sendInit(false);
+      if (retry && retry.Success) {
+        console.error('Платёж создан БЕЗ чека — проверьте подключение онлайн-кассы в личном кабинете Т-Кассы');
+        data = retry;
+      }
+    }
+
+    if (!data) {
       res.status(502).json({ error: 'Т-Касса вернула не JSON' });
       return;
     }

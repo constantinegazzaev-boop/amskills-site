@@ -10,6 +10,8 @@
 - `api/payment-init.js` — создаёт платёж в Т-Кассе, отдаёт ссылку на оплату
 - `api/payment-notification.js` — принимает webhook от Т-Кассы о статусе платежа
 - `success.html` / `fail.html` — страницы после оплаты
+- `offer.html` / `privacy.html` / `consent.html` — публичная оферта, политика обработки персональных данных, согласие (реквизиты ИП также в подвале `index.html`)
+- `fonts/` — шрифты Montserrat и Inter (woff2, лицензия SIL OFL), Google Fonts не используется
 
 ## Что нужно доделать (ждём от вас)
 
@@ -38,7 +40,19 @@ vercel dev
    - `TINKOFF_TERMINAL_KEY`
    - `TINKOFF_PASSWORD`
    - `SITE_URL=https://amskills.ru`
+   - `TINKOFF_TAXATION` — необязательна: система налогообложения для кассового чека (54-ФЗ), по умолчанию `patent`; другие значения: `usn_income`, `usn_income_outcome`, `osn`
+   - `TINKOFF_VAT` — ставка НДС в чеке; необязательна, по умолчанию `none` (без НДС)
 3. В настройках домена на Vercel подключить `amskills.ru` (Vercel выдаст DNS-записи — их нужно прописать там, где сейчас настроен домен)
 4. В личном кабинете Т-Кассы указать URL для уведомлений (`Notification URL`): `https://amskills.ru/api/payment-notification`
 
 Текущий сайт сделан на Tilda — после переключения DNS на Vercel Tilda-версия перестанет открываться по этому домену.
+
+## Юридические страницы
+
+Перед публикацией убедитесь, что в файлах не осталось заглушек `{{...}}` (дата редакции и т. п.):
+
+```bash
+grep -n '{{' *.html
+```
+
+Команда должна ничего не вывести. Форма оплаты собирает e-mail и телефон — они уходят в Т-Кассу для кассового чека (`Receipt` в `api/payment-init.js`).

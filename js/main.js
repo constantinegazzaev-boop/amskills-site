@@ -53,6 +53,8 @@ if (paymentForm) {
     e.preventDefault();
 
     const amountInput = document.getElementById('payment-amount');
+    const emailInput = document.getElementById('payment-email');
+    const phoneInput = document.getElementById('payment-phone');
     const descriptionInput = document.getElementById('payment-description');
     const submitBtn = paymentForm.querySelector('button[type="submit"]');
 
@@ -81,6 +83,8 @@ if (paymentForm) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amount,
+          email: emailInput.value.trim(),
+          phone: phoneInput.value.trim(),
           description: descriptionInput.value || 'Оплата тренировки — Антон Минаев',
         }),
       });

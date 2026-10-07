@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Антон Минаев — тренер по&nbsp;индивидуальной подготовке хоккеистов | AMSkills</title>
 <meta name="description" content="Антон Минаев — индивидуальные тренировки по&nbsp;хоккею: лёд, ОФП/СФП, бросковые тренировки, дриблинг, видео-анализ. Персональный подход к&nbsp;каждому ученику.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=30">
+<link rel="preload" href="fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/styles.css?v=32">
 </head>
 <body>
 
@@ -339,9 +338,9 @@
         <p class="section-kicker script-accent">Оплата</p>
         <h2>Оплата тренировок</h2>
         <p>
-          Стоимость и&nbsp;формат занятий согласовываются с&nbsp;тренером индивидуально.
-          Введите сумму, о&nbsp;которой договорились, и&nbsp;оплатите онлайн — банковской картой,
-          безопасно через Т‑Кассу.
+          Стоимость занятий — от&nbsp;3&nbsp;000&nbsp;₽; точная сумма и&nbsp;формат согласовываются
+          с&nbsp;тренером индивидуально. Введите сумму, о&nbsp;которой договорились, и&nbsp;оплатите
+          онлайн — банковской картой, безопасно через Т‑Кассу.
         </p>
       </div>
 
@@ -350,11 +349,28 @@
         <input type="number" id="payment-amount" name="amount" min="1" step="1" inputmode="numeric" placeholder="Например, 2000" required>
         <span class="field-hint">Не уверены в&nbsp;сумме? Уточните у&nbsp;тренера перед оплатой.</span>
 
+        <label for="payment-email">E-mail для чека</label>
+        <input type="email" id="payment-email" name="email" autocomplete="email" inputmode="email" maxlength="64" placeholder="name@example.com" required>
+
+        <label for="payment-phone">Телефон</label>
+        <input type="tel" id="payment-phone" name="phone" autocomplete="tel" inputmode="tel" maxlength="20" pattern="\+?[\d\s\(\)\-]{10,20}" title="Например, +7 900 000-00-00" placeholder="+7 900 000-00-00" required>
+        <span class="field-hint">E-mail и&nbsp;телефон нужны для отправки кассового чека.</span>
+
         <label for="payment-description">Комментарий (необязательно)</label>
-        <input type="text" id="payment-description" name="description" placeholder="Например, ФИО ученика">
+        <input type="text" id="payment-description" name="description" maxlength="100" autocomplete="off" placeholder="Например, абонемент на март">
+        <span class="field-hint">Не указывайте персональные данные — имя ученика сообщите тренеру в&nbsp;мессенджере.</span>
+
+        <label class="consent">
+          <input type="checkbox" name="offer" required>
+          <span>Я принимаю условия <a href="offer.html" target="_blank" rel="noopener">публичной оферты</a></span>
+        </label>
+        <label class="consent">
+          <input type="checkbox" name="personal-data-consent" required>
+          <span>Даю <a href="consent.html" target="_blank" rel="noopener">согласие на&nbsp;обработку персональных данных</a></span>
+        </label>
 
         <button type="submit" class="btn btn-primary btn-lg">Оплатить</button>
-        <p class="payment-note">Оплата проходит через защищённую страницу Т‑Кассы.</p>
+        <p class="payment-note">Оплата проходит через защищённую страницу Т‑Кассы. Условия оплаты и&nbsp;возврата — в&nbsp;<a href="offer.html#s6" target="_blank" rel="noopener">оферте</a>.</p>
       </form>
     </div>
   </section>
@@ -423,6 +439,20 @@
       <a href="#coaches">Тренер</a>
       <a href="#contacts">Контакты</a>
       <a href="#payment">Оплата</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-legal">
+      <p class="footer-requisites">
+        ИП Минаев Антон Игоревич · ИНН&nbsp;771314591945 · ОГРНИП&nbsp;324774600600527<br>
+        г. Москва, Покровская улица, 22<br>
+        <a href="mailto:AntonOLO1996@yandex.ru">AntonOLO1996@yandex.ru</a> · <a href="tel:+79254767731">+7 (925) 476-77-31</a>
+      </p>
+      <nav class="footer-docs" aria-label="Документы">
+        <a href="offer.html">Публичная оферта</a>
+        <a href="privacy.html">Политика конфиденциальности</a>
+        <a href="consent.html">Согласие на обработку данных</a>
+      </nav>
     </div>
   </div>
 </footer>
