@@ -15,6 +15,67 @@ function tk_config()
     return $cfg;
 }
 
+// Виды платежей: у каждого свой терминал Т-Кассы (и свой счёт в Т-Банке).
+function tk_kinds()
+{
+    return [
+        'training' => [  // «Индивидуальная тренировка»
+            'item_name'    => 'Услуги по индивидуальной подготовке хоккеистов',
+            'description'  => 'Оплата индивидуальной тренировки',
+            'order_prefix' => 'amskills-training',
+        ],
+        'other' => [     // «Прочие платежи»
+            'item_name'    => 'Оплата услуг',
+            'description'  => 'Прочие платежи',
+            'order_prefix' => 'amskills-other',
+        ],
+    ];
+}
+
+// Настройки терминала для вида платежа или null, если ключи не заданы (или остались заглушки из config.sample.php).
+function tk_terminal($type)
+{
+    $kinds = tk_kinds();
+    if (!isset($kinds[$type])) {
+        return null;
+    }
+    $cfg = tk_config();
+    $t = (isset($cfg['terminals'][$type]) && is_array($cfg['terminals'][$type])) ? $cfg['terminals'][$type] : [];
+    if (!$t && $type === 'training' && isset($cfg['terminal_key'])) {
+        $t = $cfg; // старый формат config.php: один терминал на верхнем уровне = «Индивидуальная тренировка»
+    }
+    $key      = trim((string) ($t['terminal_key'] ?? ''));
+    $password = trim((string) ($t['password'] ?? ''));
+    if ($key === '' || $password === '' || strpos($key, 'ВСТАВЬТЕ') !== false) {
+        return null;
+    }
+    $taxation = trim((string) ($t['taxation'] ?? ''));
+    $vat      = trim((string) ($t['vat'] ?? ''));
+    $item     = trim((string) ($t['item_name'] ?? ''));
+    $desc     = trim((string) ($t['description'] ?? ''));
+    return [
+        'key'          => $key,
+        'password'     => $password,
+        'taxation'     => $taxation !== '' ? $taxation : 'patent',
+        'vat'          => $vat !== '' ? $vat : 'none',
+        'item_name'    => $item !== '' ? $item : $kinds[$type]['item_name'],
+        'description'  => $desc !== '' ? $desc : $kinds[$type]['description'],
+        'order_prefix' => $kinds[$type]['order_prefix'],
+    ];
+}
+
+// Пароль терминала по TerminalKey из уведомления Т-Кассы (null, если такого терминала у нас нет).
+function tk_password_for_terminal($terminalKey)
+{
+    foreach (array_keys(tk_kinds()) as $type) {
+        $t = tk_terminal($type);
+        if ($t !== null && hash_equals($t['key'], (string) $terminalKey)) {
+            return $t['password'];
+        }
+    }
+    return null;
+}
+
 // Тело запроса: JSON или form-urlencoded (в тестах подменяется через $GLOBALS['TK_INPUT'])
 function tk_input()
 {

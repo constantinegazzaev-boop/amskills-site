@@ -1,17 +1,35 @@
 // Serverless-функция (формат Vercel) — создаёт платёж в Т-Кассе и возвращает ссылку на оплату.
-// Требует переменные окружения:
-//   TINKOFF_TERMINAL_KEY  — TerminalKey из личного кабинета Т-Кассы
-//   TINKOFF_PASSWORD      — секретный пароль терминала (НЕ публиковать, только в .env / настройках хостинга)
+// Два вида платежей, у каждого свой терминал Т-Кассы (и свой счёт в Т-Банке):
+//   training — «Индивидуальная тренировка»: TINKOFF_TERMINAL_KEY, TINKOFF_PASSWORD
+//   other    — «Прочие платежи»:            TINKOFF_TERMINAL_KEY_OTHER, TINKOFF_PASSWORD_OTHER
+// Пароль терминала — секрет (НЕ публиковать, только в настройках хостинга).
 //   SITE_URL              — https://amskills.ru (для Success/Fail редиректов)
-// Для кассового чека (54-ФЗ):
+// Для кассового чека (54-ФЗ), общие для обоих терминалов (для «прочих» можно задать свои с суффиксом _OTHER):
 //   TINKOFF_TAXATION      — система налогообложения ИП: patent (по умолчанию) | usn_income | usn_income_outcome | osn
 //   TINKOFF_VAT           — ставка НДС в чеке, по умолчанию none (без НДС): none | vat0 | vat5 | vat7 | vat20 | vat22
+//   TINKOFF_ITEM_NAME_OTHER — название позиции в чеке для «прочих платежей» (по умолчанию «Оплата услуг»)
 const crypto = require('crypto');
 const https = require('https');
 const { RUSSIAN_TRUSTED_ROOT_CA, RUSSIAN_TRUSTED_SUB_CA } = require('./_russian-trusted-ca');
 
 const INIT_HOST = 'securepay.tinkoff.ru';
 const INIT_PATH = '/v2/Init';
+
+// Виды платежей: суффикс переменных окружения, позиция в чеке, описание и префикс номера заказа.
+const KINDS = {
+  training: {
+    suffix: '',
+    itemName: 'Услуги по индивидуальной подготовке хоккеистов',
+    description: 'Оплата индивидуальной тренировки',
+    orderPrefix: 'amskills-training',
+  },
+  other: {
+    suffix: '_OTHER',
+    itemName: 'Оплата услуг',
+    description: 'Прочие платежи',
+    orderPrefix: 'amskills-other',
+  },
+};
 
 // securepay.tinkoff.ru использует сертификат от Минцифры России, которому
 // стандартный набор доверенных CA (используемый fetch/undici) не доверяет.
@@ -56,6 +74,22 @@ function normalizePhone(raw) {
   return null;
 }
 
+// Настройки терминала для вида платежа или null, если ключи не заданы.
+function terminalFor(kindName) {
+  const kind = KINDS[kindName];
+  const env = process.env;
+  const key = (env['TINKOFF_TERMINAL_KEY' + kind.suffix] || '').trim();
+  const password = (env['TINKOFF_PASSWORD' + kind.suffix] || '').trim();
+  if (!key || !password) return null;
+  return {
+    key,
+    password,
+    taxation: (env['TINKOFF_TAXATION' + kind.suffix] || env.TINKOFF_TAXATION || 'patent').trim(),
+    vat: (env['TINKOFF_VAT' + kind.suffix] || env.TINKOFF_VAT || 'none').trim(),
+    itemName: (env['TINKOFF_ITEM_NAME' + kind.suffix] || kind.itemName).trim(),
+  };
+}
+
 // Токен считается только по плоским полям корневого объекта — Receipt в него не входит.
 function buildToken(params, password) {
   const tokenParams = { ...params, Password: password };
@@ -72,15 +106,6 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const terminalKey = (process.env.TINKOFF_TERMINAL_KEY || '').trim();
-  const password = (process.env.TINKOFF_PASSWORD || '').trim();
-  const siteUrl = process.env.SITE_URL || 'https://amskills.ru';
-
-  if (!terminalKey || !password) {
-    res.status(500).json({ error: 'Платёжный модуль не настроен (нет ключей Т-Кассы)' });
-    return;
-  }
-
   let body = req.body;
   if (!body || typeof body === 'string') {
     try {
@@ -90,8 +115,24 @@ module.exports = async (req, res) => {
     }
   }
 
+  // Что оплачивает человек — от этого зависит терминал (и счёт), на который придут деньги.
+  const kindName = String(body.type || '');
+  if (!Object.prototype.hasOwnProperty.call(KINDS, kindName)) {
+    res.status(400).json({ error: 'Выберите, что вы оплачиваете' });
+    return;
+  }
+  const kind = KINDS[kindName];
+
+  const terminal = terminalFor(kindName);
+  const siteUrl = process.env.SITE_URL || 'https://amskills.ru';
+
+  if (!terminal) {
+    res.status(500).json({ error: 'Платёжный модуль не настроен (нет ключей Т-Кассы)' });
+    return;
+  }
+
   const amount = Number(body.amount);
-  const description = (body.description || 'Оплата тренировки AMSkills').slice(0, 250);
+  const description = (body.description || kind.description).slice(0, 250);
 
   if (!amount || amount <= 0) {
     res.status(400).json({ error: 'Некорректная сумма' });
@@ -110,11 +151,11 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const orderId = `amskills-${Date.now()}`;
+  const orderId = `${kind.orderPrefix}-${Date.now()}`;
   const amountKop = Math.round(amount * 100); // в копейках
 
   const initParams = {
-    TerminalKey: terminalKey,
+    TerminalKey: terminal.key,
     Amount: amountKop,
     OrderId: orderId,
     Description: description,
@@ -122,21 +163,21 @@ module.exports = async (req, res) => {
     FailURL: `${siteUrl}/fail.html`,
   };
 
-  const token = buildToken(initParams, password);
+  const token = buildToken(initParams, terminal.password);
 
   // Кассовый чек по 54-ФЗ: одна позиция «услуга», расчёт в момент оплаты.
   // ИП на патенте — по умолчанию; способ расчёта (full_payment) подтвердите у бухгалтера.
   const receipt = {
     Email: email,
     Phone: phone,
-    Taxation: (process.env.TINKOFF_TAXATION || 'patent').trim(),
+    Taxation: terminal.taxation,
     Items: [
       {
-        Name: 'Услуги по индивидуальной подготовке хоккеистов',
+        Name: terminal.itemName,
         Price: amountKop,
         Quantity: 1,
         Amount: amountKop,
-        Tax: (process.env.TINKOFF_VAT || 'none').trim(),
+        Tax: terminal.vat,
         PaymentMethod: 'full_payment',
         PaymentObject: 'service',
       },
@@ -162,10 +203,10 @@ module.exports = async (req, res) => {
     // Если Т-Касса не приняла чек (например, касса не привязана к терминалу), создаём платёж без него,
     // чтобы не терять оплаты, и пишем в лог — чек тогда придётся пробить вручную. Данные плательщика в лог не попадают.
     if (data && !data.Success) {
-      console.error('Т-Касса отклонила Init с чеком:', data.ErrorCode, data.Message, data.Details);
+      console.error(`Т-Касса отклонила Init с чеком (${kindName}):`, data.ErrorCode, data.Message, data.Details);
       const retry = await sendInit(false);
       if (retry && retry.Success) {
-        console.error('Платёж создан БЕЗ чека — проверьте подключение онлайн-кассы в личном кабинете Т-Кассы');
+        console.error(`Платёж (${kindName}) создан БЕЗ чека — проверьте подключение онлайн-кассы в личном кабинете Т-Кассы`);
         data = retry;
       }
     }

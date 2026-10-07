@@ -37,8 +37,9 @@ vercel dev
 
 1. `vercel` в корне проекта — задеплоит сайт и API как есть, бесплатно
 2. В настройках проекта на vercel.com → Environment Variables добавить:
-   - `TINKOFF_TERMINAL_KEY`
-   - `TINKOFF_PASSWORD`
+   - `TINKOFF_TERMINAL_KEY`, `TINKOFF_PASSWORD` — терминал для платежей «Индивидуальная тренировка»
+   - `TINKOFF_TERMINAL_KEY_OTHER`, `TINKOFF_PASSWORD_OTHER` — второй терминал (свой счёт в Т-Банке) для платежей «Прочие платежи»;
+     по желанию свои `TINKOFF_TAXATION_OTHER`, `TINKOFF_VAT_OTHER`, `TINKOFF_ITEM_NAME_OTHER` (название позиции в чеке)
    - `SITE_URL=https://amskills.ru`
    - `TINKOFF_TAXATION` — необязательна: система налогообложения для кассового чека (54-ФЗ), по умолчанию `patent`; другие значения: `usn_income`, `usn_income_outcome`, `osn`
    - `TINKOFF_VAT` — ставка НДС в чеке; необязательна, по умолчанию `none` (без НДС)

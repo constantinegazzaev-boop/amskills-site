@@ -7,7 +7,7 @@
 <meta name="description" content="Антон Минаев — индивидуальные тренировки по&nbsp;хоккею: лёд, ОФП/СФП, бросковые тренировки, дриблинг, видео-анализ. Персональный подход к&nbsp;каждому ученику.">
 <link rel="preload" href="fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=33">
+<link rel="stylesheet" href="css/styles.css?v=34">
 </head>
 <body>
 
@@ -339,12 +339,26 @@
         <h2>Оплата тренировок</h2>
         <p>
           Стоимость занятий — от&nbsp;3&nbsp;000&nbsp;₽; точная сумма и&nbsp;формат согласовываются
-          с&nbsp;тренером индивидуально. Введите сумму, о&nbsp;которой договорились, и&nbsp;оплатите
-          онлайн — банковской картой, безопасно через Т‑Кассу.
+          с&nbsp;тренером индивидуально. Выберите, что вы оплачиваете, введите сумму, о&nbsp;которой
+          договорились, и&nbsp;оплатите онлайн — банковской картой, безопасно через Т‑Кассу.
         </p>
       </div>
 
       <form class="payment-card" id="payment-form" data-animate="fade-up" style="--d:1">
+        <fieldset class="pay-type">
+          <legend>Что вы оплачиваете?</legend>
+          <div class="pay-type-options">
+            <label class="pay-type-option">
+              <input type="radio" name="payment-type" value="training" required>
+              <span>Индивидуальная тренировка</span>
+            </label>
+            <label class="pay-type-option">
+              <input type="radio" name="payment-type" value="other" required>
+              <span>Прочие платежи</span>
+            </label>
+          </div>
+        </fieldset>
+
         <label for="payment-amount">Сумма к&nbsp;оплате, ₽</label>
         <input type="number" id="payment-amount" name="amount" min="1" step="1" inputmode="numeric" placeholder="Например, 2000" required>
         <span class="field-hint">Не уверены в&nbsp;сумме? Уточните у&nbsp;тренера перед оплатой.</span>

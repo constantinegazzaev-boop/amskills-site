@@ -1,7 +1,21 @@
 // Webhook уведомлений от Т-Кассы о статусе платежа.
 // Т-Касса требует ответ "OK" (без кавычек, статус 200), иначе будет повторять запрос.
 // Сейчас функция только проверяет подпись и логирует статус — подключите e-mail/CRM/БД по необходимости.
+// Терминала два («Индивидуальная тренировка» и «Прочие платежи»), у каждого свой пароль:
+// пароль выбирается по TerminalKey из уведомления (TINKOFF_TERMINAL_KEY / TINKOFF_TERMINAL_KEY_OTHER).
 const crypto = require('crypto');
+
+function passwordFor(terminalKey) {
+  const env = process.env;
+  const pairs = [
+    [env.TINKOFF_TERMINAL_KEY, env.TINKOFF_PASSWORD],
+    [env.TINKOFF_TERMINAL_KEY_OTHER, env.TINKOFF_PASSWORD_OTHER],
+  ];
+  for (const [key, password] of pairs) {
+    if (key && password && key.trim() === String(terminalKey)) return password.trim();
+  }
+  return null;
+}
 
 function buildToken(params, password) {
   const tokenParams = { ...params, Password: password };
@@ -21,7 +35,6 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const password = process.env.TINKOFF_PASSWORD;
   let body = req.body;
   if (!body || typeof body === 'string') {
     try {
@@ -29,6 +42,12 @@ module.exports = async (req, res) => {
     } catch {
       body = {};
     }
+  }
+
+  const password = passwordFor(body.TerminalKey);
+  if (!password) {
+    res.status(400).send('Unknown terminal');
+    return;
   }
 
   const expectedToken = buildToken(body, password);

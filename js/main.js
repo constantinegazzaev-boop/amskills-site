@@ -52,6 +52,7 @@ if (paymentForm) {
   paymentForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const typeInput = paymentForm.querySelector('input[name="payment-type"]:checked');
     const amountInput = document.getElementById('payment-amount');
     const emailInput = document.getElementById('payment-email');
     const phoneInput = document.getElementById('payment-phone');
@@ -82,10 +83,11 @@ if (paymentForm) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          type: typeInput ? typeInput.value : '',
           amount,
           email: emailInput.value.trim(),
           phone: phoneInput.value.trim(),
-          description: descriptionInput.value || 'Оплата тренировки — Антон Минаев',
+          description: descriptionInput.value.trim(),
         }),
       });
 
