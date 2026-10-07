@@ -1,0 +1,38 @@
+# AMSkills — настройки Apache для обычного хостинга (кладётся в корень сайта вместе с остальными файлами).
+# Если после загрузки сайт выдаёт ошибку 500, переименуйте этот файл (например, в .htaccess.off): сайт откроется,
+# но не будут работать оплата и переадресации. Тогда напишите, на каком хостинге это произошло.
+
+DirectoryIndex index.html
+
+<IfModule mod_mime.c>
+  AddDefaultCharset UTF-8
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Адрес без www (на HTTPS сайт переводится переключателем в панели хостинга, не здесь)
+  RewriteCond %{HTTP_HOST} ^www\.amskills\.ru$ [NC]
+  RewriteRule ^ https://amskills.ru%{REQUEST_URI} [R=301,L]
+
+  # Платёжные скрипты доступны по тем же адресам, что и на Vercel
+  RewriteRule ^api/payment-init/?$ api/payment-init.php [L]
+  RewriteRule ^api/payment-notification/?$ api/payment-notification.php [L]
+
+  # Адреса старого сайта → новые страницы
+  RewriteRule ^politika/?$ /privacy.html [R=301,L]
+  RewriteRule ^oplatarazovoytrenirivki/?$ /#payment [NE,R=301,L]
+  RewriteRule ^application3/?$ /rules.html [R=301,L]
+  RewriteRule ^application4/?$ /safety.html [R=301,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  <FilesMatch "\.(woff2|webp|jpe?g|png|svg|css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>

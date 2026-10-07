@@ -1,0 +1,10 @@
+# Прямой доступ к служебным файлам закрыт (платёжные скрипты payment-*.php остаются доступны).
+<FilesMatch "^(lib\.php|config\.php|config\.sample\.php|russian-trusted-ca\.pem)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

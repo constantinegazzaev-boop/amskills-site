@@ -1045,3 +1045,19 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   .legal-dl { padding: 2px 18px; }
   .legal-dl dd { font-size: 15.5px; }
 }
+
+/* Приложения к оферте: строки для подписей и печать документов */
+.legal-sign-intro { margin-top: 28px; }
+.legal-sign { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin: 0 0 14px; }
+.sign-line { display: inline-block; flex: 1 1 140px; min-width: 140px; max-width: 280px; height: 1em; border-bottom: 1px solid rgba(255,255,255,0.45); }
+@media print {
+  body { background: #fff; color: #000; }
+  .site-header, .site-footer { display: none; }
+  .legal { padding: 0; background: #fff; }
+  .legal h1, .legal h2, .legal b, .legal-meta { color: #000; }
+  .legal h2 { border-top-color: #bbb; }
+  .legal p, .legal li { color: #000; font-size: 12pt; line-height: 1.5; }
+  .legal a { color: #000; text-decoration: none; }
+  .legal-requisites, .legal-dl { background: #fff; border-color: #bbb; }
+  .sign-line { border-bottom-color: #000; }
+}

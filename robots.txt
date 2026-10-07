@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /success.html
+Disallow: /fail.html
+
+Sitemap: https://amskills.ru/sitemap.xml
