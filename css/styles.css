@@ -569,15 +569,27 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   line-height: 1.75;
   color: var(--color-muted);
 }
+/* Логотип академии: оригинал рассчитан на белый фон, поэтому лежит на белой плашке */
+.partner-logo {
+  display: block;
+  width: 176px;
+  height: auto;
+  margin: 0 auto 30px;
+  padding: 14px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.42);
+}
 .team-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px 24px;
-  margin-top: 64px;
+  max-width: 1000px;
+  margin: 64px auto 0;
 }
 .team-card {
-  flex: 0 0 calc((100% - 96px) / 5);
+  flex: 0 0 calc((100% - 72px) / 4);
   text-align: center;
 }
 .team-photo {
@@ -618,11 +630,15 @@ p { margin: 0 0 16px; color: var(--color-muted); }
   border-radius: var(--radius);
 }
 @media (max-width: 1000px) {
-  .team-card { flex-basis: calc((100% - 48px) / 3); }
+  .team-grid { max-width: 540px; }
+  .team-card { flex-basis: calc((100% - 24px) / 2); }
 }
 @media (max-width: 700px) {
-  .team-grid { gap: 36px; margin-top: 44px; }
-  .team-card { flex-basis: 100%; max-width: 240px; }
+  .partner-logo { width: 148px; margin-bottom: 26px; padding: 12px; border-radius: 20px; }
+  .team-grid { gap: 32px 16px; margin-top: 44px; }
+  .team-card { flex-basis: calc((100% - 16px) / 2); }
+  .team-name { margin-top: 16px; font-size: 15.5px; }
+  .team-role { font-size: 12.5px; }
   .partner-note { margin-top: 52px; padding: 22px; font-size: 16px; }
 }
 
